@@ -14,23 +14,13 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', [PostController::class, 'Post'])->name('dashboard');
 
 Route::get('/newPost', function () {
     return view('components.action-newpost');
 })->name('newPost');
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+
 
 Route::get('/dashboard', [PostController::class, 'Post'])->name('dashboard');
 Route::post('/create-post', [PostController::class, 'create'])->name('createPost');

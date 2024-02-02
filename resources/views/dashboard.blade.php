@@ -1,5 +1,7 @@
+
 @auth
     <x-app-layout>
+
         <div class="max-w-4xl mx-auto mt-8 flex justify-between items-center">
             <h1 class="text-3xl font-semibold text-gray-800">Mi Blog</h1>
             <button id="btnAddNewPost" class="rounded h-10 w-20 bg-green-500 text-white hover:bg-green-600">
@@ -68,7 +70,6 @@
                 <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Publicar</button>
             </form>
         </div>
-
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
@@ -97,11 +98,71 @@
              });
         </script>
 
+
     </x-app-layout>
 @else 
     <x-app-layout>
-        <div>
-            <h1>Estoy fuera</h1>
+    <h1 class="text-3xl font-semibold text-gray-800">Posts</h1>
+    <div class="max-w-4xl mx-auto mt-4 space-y-6">
+    @foreach($posts as $post)
+        <div class="bg-white p-6 rounded-md shadow-md">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800">{{ $post->title }}</h2>
+                    <span class="text-gray-500">
+                        {{ $post->created_at->format('F d, Y') }} | <span class="text-pink-600">{{ $post->user }}</span>
+                    </span>
+                </div>
+                <div>
+                    <!-- Agregado: Botón para desplegar comentarios -->
+                    <button class="text-gray-500 hover:text-blue-500">Show Comments</button>
+                </div>
+            </div>
+            <p class="mt-2 text-gray-600">{{ $post->content }}</p>
+            <div class="mt-4 hidden">
+                <!-- Sección de comentarios -->
+                <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">Comments</h3>
+                <!-- Agregado: Iterar sobre los comentarios y mostrarlos -->
+                @foreach($comments as $comment)
+                    <div class="text-gray-600 mb-2">
+                        <span class="font-semibold {{ Auth::id() === $comment->user_id ? 'text-pink-600' : 'text-blue-500' }}">
+                            @foreach($user as $users)
+                                @if($users->id === $comment->user_id && $post->id === $comment->post_id)
+                                {{ $users->name }}:
+                        </span>
+                        <span class="font-semibold">
+                            {{ $comment->comment }} 
+                        </span>
+                        @endif 
+                        @endforeach
+                    </div>
+                @endforeach
+            </div>
+                <!-- Input para agregar comentario -->
+                <div>
+                <form action="{{ route('createComment', ['postId' => $post->id]) }}" method="post">
+                </form>
+
+                </div>
+            </div>
         </div>
+    @endforeach
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+ const showCommentButtons = document.querySelectorAll('.bg-white button');
+
+ showCommentButtons.forEach(button => {
+     button.addEventListener('click', function() {
+         const postContainer = this.closest('.bg-white');
+         const commentsSection = postContainer.querySelector('.hidden');
+         commentsSection.classList.toggle('hidden');
+     });
+ });
+});
+</script>
+    </script>
     </x-app-layout>
 @endauth
