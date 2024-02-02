@@ -3,7 +3,7 @@
     <x-app-layout>
 
         <div class="max-w-4xl mx-auto mt-8 flex justify-between items-center">
-            <h1 class="text-3xl font-semibold text-gray-800">Mi Blog</h1>
+            <h1 class="text-3xl font-semibold text-gray-800">Posts</h1>
             <button id="btnAddNewPost" class="rounded h-10 w-20 bg-green-500 text-white hover:bg-green-600">
                 New Post
             </button>
